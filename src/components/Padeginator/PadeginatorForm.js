@@ -42,6 +42,7 @@ const PadeginatorForm = () => {
       <form onSubmit={getWordHandler} action=''>
         <div className={`${wordInputStyles}`}>
           <input
+            placeholder='Введите слово в ед. числе'
             onChange={wordChangeHandler}
             onBlur={wordBlurHandler}
             value={enteredWord}
@@ -55,12 +56,12 @@ const PadeginatorForm = () => {
         </div>
         <div className={styles.actions}>
           <select onChange={inputCaseHandler} name='caseVal' id=''>
-            <option value='imen'>Именительный</option>
-            <option value='rod'>Родительный</option>
-            <option value='dat'>Дательный</option>
-            <option value='vin'>Винительный</option>
-            <option value='tvor'>Творительный</option>
-            <option value='predl'>Предложный</option>
+            <option value='imen'>Именительный падеж</option>
+            <option value='rod'>Родительный падеж</option>
+            <option value='dat'>Дательный падеж</option>
+            <option value='vin'>Винительный падеж</option>
+            <option value='tvor'>Творительный падеж</option>
+            <option value='predl'>Предложный падеж</option>
           </select>
           <button disabled={!formIsValid} className={styles.action}>
             Просклонять слово
