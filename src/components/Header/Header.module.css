@@ -10,3 +10,8 @@
   padding: 0 10%;
 }
 
+.header sup {
+  font-size: 1.2rem;
+  color: var(--white)
+}
+

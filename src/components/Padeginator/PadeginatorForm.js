@@ -1,30 +1,58 @@
 import { useState } from 'react';
 import { padeginatorFunc } from '../../helpers/padeginatorFunc';
+import useInput from '../../hooks/use-input';
 
-import styles from './Padeginator.module.css';
+import styles from './PadeginatorForm.module.css';
 
-const PadeginatorForm = (props) => {
-  const [inputedWord, setInputedWord] = useState('');
+const PadeginatorForm = () => {
+  // const [inputedWord, setInputedWord] = useState('');
   const [targetWord, setTargetWord] = useState('');
   const [inputedCase, setInputedCase] = useState('imen');
 
-  console.log(inputedCase);
+  const {
+    value: enteredWord,
+    isValid: wordIsValid,
+    hasError: wordHasError,
+    valueChangeHandler: wordChangeHandler,
+    inputBlurHandler: wordBlurHandler,
+  } = useInput((value) => value.trim().length > 2 && !/[a-z]/gi.test(value));
 
-  const inputWordHandler = (event) => {
-    setInputedWord(event.target.value);
-  };
+  let formIsValid = false;
+
+  if (wordIsValid) {
+    formIsValid = true;
+  } else {
+    formIsValid = false;
+  }
 
   const getWordHandler = (event) => {
     event.preventDefault();
-    setTargetWord(padeginatorFunc(inputedWord, inputedCase));
+    setTargetWord(padeginatorFunc(enteredWord.toLowerCase(), inputedCase));
   };
   const inputCaseHandler = (event) => {
     setInputedCase(event.target.value);
   };
+
+  const wordInputStyles = wordHasError
+    ? `${styles.control} ${styles.invalid}`
+    : `${styles.control}`;
+
   return (
     <>
-      <form onSubmit={getWordHandler} className={styles.control} action=''>
-        <input onChange={inputWordHandler} value={inputedWord} type='text' />
+      <form onSubmit={getWordHandler} action=''>
+        <div className={`${wordInputStyles}`}>
+          <input
+            onChange={wordChangeHandler}
+            onBlur={wordBlurHandler}
+            value={enteredWord}
+            type='text'
+          />
+          {wordHasError && (
+            <p className={styles.error_text}>
+              Длина слова не менее 3 букв, только кириллица
+            </p>
+          )}
+        </div>
         <div className={styles.actions}>
           <select onChange={inputCaseHandler} name='caseVal' id=''>
             <option value='imen'>Именительный</option>
@@ -34,10 +62,12 @@ const PadeginatorForm = (props) => {
             <option value='tvor'>Творительный</option>
             <option value='predl'>Предложный</option>
           </select>
-          <button className={styles.action}>Просклонять слово</button>
+          <button disabled={!formIsValid} className={styles.action}>
+            Просклонять слово
+          </button>
         </div>
       </form>
-      <h1>{targetWord}</h1>
+      <p className={styles.result__block}>{targetWord}</p>
     </>
   );
 };
